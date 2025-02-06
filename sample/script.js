@@ -1,7 +1,7 @@
 onload = () => {
     
     setCanvas(document.getElementById("canvas"))
-    var box1 = new box(10, 10, 100, 100, "red");
+    var box1 = new box(50, 50, 100, 100, "red");
     workspace.add(box1);
     
     function draw() {
