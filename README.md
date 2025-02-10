@@ -9,7 +9,17 @@
 <script src="https://raw.githubusercontent.com/erkhgbjetmbrjdfm/gg2.js/refs/heads/main/gg2.js"></script>
 ```
 
-## オブジェクトを作成する
+## カメラを作る
+```javascript
+new Camera(x座標,y座標)
+```
+
+## カメラを切り替える
+```javascript
+カメラ.switching()
+```
+
+## オブジェクトを作成
 
 ```javascript
 //ポイントを作成
@@ -23,7 +33,7 @@ new line(始点, 終点, ?色)
 new box(x座標, y座標, 横幅, 縦幅, ?色)
 
 //円を作成
-new circle(x座標, y座標, 半径)
+new circle(x座標, y座標, 半径, ?色)
 ```
 
 ## オブジェクトを追加
@@ -32,18 +42,27 @@ new circle(x座標, y座標, 半径)
 workspace.add(オブジェクト)
 ```
 
+## オブジェクトの削除
+```javascript
+オブジェクト.delete()
+```
+
 ## 当たり判定
 ```javascript
 オブジェクト.touchObject()
 //触れているオブジェクトの配列を返す
 ```
 
-## 毎フレーム描画する
+## 毎フレーム実行する
 
 ```javascript
-function draw() {
-        drawAll();
-        requestAnimationFrame(draw);
+ondraw = () => {
+    //処理
 }
-draw()
+```
+
+## マウスの位置を取得
+```javascript
+mouseX //x座標
+mouseY //y座標
 ```

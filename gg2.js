@@ -1,10 +1,31 @@
 let ctx;
 let canvas;
 let workspace = new Set();
+let camera
+let mouseX = 0;
+let mouseY = 0;
+let mouseMoveEventListenerId
+let ondraw = () => {};
 
 function setCanvas(_canvas) {
+    if (mouseMoveEventListenerId) mouseMoveEventListenerId.clearEventListener();
     ctx = _canvas.getContext("2d");
     canvas = _canvas;
+    mouseMoveEventListenerId = canvas.addEventListener("mousemove", (e) => {
+        mouseX = e.offsetX + camera.x;
+        mouseY = e.offsetY + camera.y;
+    });
+}
+
+class Camera {
+    constructor(x, y) {
+        this.x = x || 0;
+        this.y = y || 0;
+    }
+
+    switching() {
+        camera = this;
+    }
 }
 
 class point {
@@ -95,15 +116,21 @@ class line {
         this.endPoint = endPoint;
         this.color = color || "black";
         this.width = width || 1;
+
+        this.id = crypto.randomUUID();
     }
 
     draw() {
         ctx.lineWidth = this.width;
         ctx.strokeStyle = this.color;
         ctx.beginPath();
-        ctx.moveTo(this.startPoint.x, this.startPoint.y);
-        ctx.lineTo(this.endPoint.x, this.endPoint.y);
+        ctx.moveTo(this.startPoint.x - camera.x, this.startPoint.y - camera.y);
+        ctx.lineTo(this.endPoint.x - camera.x, this.endPoint.y - camera.y);
         ctx.stroke();
+    }
+    
+    delete() {
+        workspace.delete(this);
     }
 
     touchObject() {
@@ -134,11 +161,13 @@ class box {
         this.width = width;
         this.height = height;
         this.color = color || "black";
+
+        this.id = crypto.randomUUID();
     }
 
     draw() {
         ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.fillRect(this.x - camera.x, this.y - camera.y, this.width, this.height);
     }
 
     delete() {
@@ -169,12 +198,14 @@ class circle {
         this.y = y;
         this.radius = radius;
         this.color = color || "black";
+
+        this.id = crypto.randomUUID();
     }
 
     draw() {
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.arc(this.x - camera.x, this.y - camera.y, this.radius, 0, 2 * Math.PI);
         ctx.fill();
     }
 
@@ -202,8 +233,17 @@ class circle {
 
 function drawAll() {
     console.log("Drawing all");
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    workspace.forEach((value) => {
+    try {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        workspace.forEach((value) => {
             value.draw();
-    });
+        });
+    } catch (e) {}
 }
+
+function redraw() {
+    ondraw();
+    drawAll();
+    requestAnimationFrame(redraw);
+}
+redraw()
