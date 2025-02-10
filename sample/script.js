@@ -17,6 +17,10 @@ onload = () => {
         touch.textContent = obj1.touchObject().length;
     });
 
+    document.addEventListener("scrloll",(e) => {
+        e.preventDefault()
+    })
+
     function draw() {
         drawAll();
         requestAnimationFrame(draw);
