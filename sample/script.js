@@ -17,9 +17,9 @@ onload = () => {
         touch.textContent = obj1.touchObject().length;
     });
 
-    document.addEventListener("scrloll",(e) => {
-        e.preventDefault()
-    })
+    document.addEventListener("touchmove",(e) => {
+    e.preventDefault()
+    },{passive:false})
 
     function draw() {
         drawAll();
