@@ -6,7 +6,7 @@
 
 読み込む
 ```html
-<script src="https://raw.githubusercontent.com/erkhgbjetmbrjdfm/gg2.js/c3722fc3b6bc2546c9a4bc20729280e54b74f9bf/gg2.js"></script>
+<script src="https://raw.githubusercontent.com/erkhgbjetmbrjdfm/gg2.js/refs/heads/main/gg2.js"></script>
 ```
 
 ## オブジェクトを作成する
