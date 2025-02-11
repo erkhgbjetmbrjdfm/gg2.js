@@ -4,8 +4,19 @@ let workspace = new Set();
 let camera
 let mouseX = 0;
 let mouseY = 0;
+let keys = new Set();
 let mouseMoveEventListenerId
 let ondraw = () => {};
+
+addEventListener("keydown", (e) => {
+    keys.add(e.key);
+    console.log(keys);
+})
+
+addEventListener("keyup", (e) => {
+    keys.delete(e.key);
+    console.log(keys);
+})
 
 function setCanvas(_canvas) {
     if (mouseMoveEventListenerId) mouseMoveEventListenerId.clearEventListener();
@@ -232,7 +243,6 @@ class circle {
 }
 
 function drawAll() {
-    console.log("Drawing all");
     try {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         workspace.forEach((value) => {

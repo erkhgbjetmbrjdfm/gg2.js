@@ -66,3 +66,8 @@ ondraw = () => {
 mouseX //x座標
 mouseY //y座標
 ```
+
+## 押されているキーを種類
+```javascript
+keys //押されているキーのSet
+```
