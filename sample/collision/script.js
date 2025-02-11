@@ -11,7 +11,9 @@ onload = () => {
     workspace.add(obj3);
     const obj4 = new box(500, 200, 200, 200, "yellow");
     workspace.add(obj4);
-    const obj5 = new box(0, 100, 100, 100, "purple");
+    const img = new Image();
+    img.src = "./img.png";
+    const obj5 = new box(0, 100, 100, 100, "purple", img);
     workspace.add(obj5);
     let timer = 0;
 

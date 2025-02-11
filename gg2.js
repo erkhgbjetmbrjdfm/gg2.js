@@ -244,19 +244,24 @@ class line {
 }
 
 class box {
-    constructor(x, y, width, height, color) {
+    constructor(x, y, width, height, color, image) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color || "black";
+        this.color = color;
+        this.image = image;
 
         this.id = crypto.randomUUID();
     }
 
     draw() {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x - camera.x, this.y - camera.y, this.width, this.height);
+        if (this.image == undefined) {
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x - camera.x, this.y - camera.y, this.width, this.height);
+        } else {
+            ctx.drawImage(this.image, this.x - camera.x, this.y - camera.y, this.width, this.height);
+        }
     }
 
     delete() {
@@ -287,7 +292,6 @@ class circle {
         this.y = y;
         this.radius = radius;
         this.color = color || "black";
-
         this.id = crypto.randomUUID();
     }
 
