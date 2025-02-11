@@ -4,18 +4,16 @@ let workspace = new Set();
 let camera
 let mouseX = 0;
 let mouseY = 0;
-let keys = new Set();
+let keys = {};
 let mouseMoveEventListenerId
 let ondraw = () => {};
 
 addEventListener("keydown", (e) => {
-    keys.add(e.key);
-    console.log(keys);
+    keys[e.key] = true
 })
 
 addEventListener("keyup", (e) => {
-    keys.delete(e.key);
-    console.log(keys);
+    keys[e.key] = false
 })
 
 function setCanvas(_canvas) {
