@@ -53,6 +53,11 @@ workspace.add(オブジェクト)
 //触れているオブジェクトの配列を返す
 ```
 
+## 交差している点
+```javascript
+lineのインスタンス.getIntersectionPoints() //point
+```
+
 ## 毎フレーム実行する
 
 ```javascript

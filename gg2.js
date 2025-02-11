@@ -121,6 +121,55 @@ function circlesCollide(c1, c2) {
     return dx * dx + dy * dy <= (c1.radius + c2.radius) ** 2;
 }
 
+function lineIntersectionPoint(a1, a2, b1, b2) {
+    const denominator = (b2.y - b1.y) * (a2.x - a1.x) - (b2.x - b1.x) * (a2.y - a1.y);
+    if (denominator === 0) return null;
+
+    const ua = ((b2.x - b1.x) * (a1.y - b1.y) - (b2.y - b1.y) * (a1.x - b1.x)) / denominator;
+    const ub = ((a2.x - a1.x) * (a1.y - b1.y) - (a2.y - a1.y) * (a1.x - b1.x)) / denominator;
+
+    if (ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1) {
+        return new point(
+            a1.x + ua * (a2.x - a1.x),
+            a1.y + ua * (a2.y - a1.y)
+        );
+    } else {
+        return null;
+    }
+}
+
+function lineCircleIntersectionPoints(line, circle) {
+    const p1 = line.startPoint;
+    const p2 = line.endPoint;
+    const cx = circle.x;
+    const cy = circle.y;
+    const r = circle.radius;
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+
+    const a = dx * dx + dy * dy;
+    if (a === 0) {
+        const distSq = (p1.x - cx) ** 2 + (p1.y - cy) ** 2;
+        return distSq <= r * r ? [new point(p1.x, p1.y)] : [];
+    }
+
+    const b = 2 * (dx * (p1.x - cx) + dy * (p1.y - cy));
+    const c = (p1.x - cx) ** 2 + (p1.y - cy) ** 2 - r * r;
+
+    const discriminant = b * b - 4 * a * c;
+    if (discriminant < 0) return [];
+
+    const sqrtD = Math.sqrt(discriminant);
+    const t1 = (-b - sqrtD) / (2 * a);
+    const t2 = (-b + sqrtD) / (2 * a);
+
+    const points = [];
+    if (t1 >= 0 && t1 <= 1) points.push(new point(p1.x + t1 * dx, p1.y + t1 * dy));
+    if (t2 >= 0 && t2 <= 1 && Math.abs(t1 - t2) > 1e-8) points.push(new point(p1.x + t2 * dx, p1.y + t2 * dy));
+    return points;
+}
+
 class line {
     constructor(startPoint, endPoint, color, width) {
         this.startPoint = startPoint;
@@ -162,6 +211,35 @@ class line {
             if (collision) touching.push(obj);
         }
         return touching;
+    }
+
+    getIntersectionPoints() {
+        const points = [];
+        for (const obj of workspace) {
+            if (obj === this) continue;
+            if (obj instanceof line) {
+                const p = lineIntersectionPoint(
+                    this.startPoint, this.endPoint,
+                    obj.startPoint, obj.endPoint
+                );
+                if (p) points.push(p);
+            } else if (obj instanceof box) {
+                const edges = [
+                    [new point(obj.x, obj.y), new point(obj.x + obj.width, obj.y)],
+                    [new point(obj.x + obj.width, obj.y), new point(obj.x + obj.width, obj.y + obj.height)],
+                    [new point(obj.x, obj.y + obj.height), new point(obj.x + obj.width, obj.y + obj.height)],
+                    [new point(obj.x, obj.y), new point(obj.x, obj.y + obj.height)]
+                ];
+                for (const [b1, b2] of edges) {
+                    const p = lineIntersectionPoint(this.startPoint, this.endPoint, b1, b2);
+                    if (p) points.push(p);
+                }
+            } else if (obj instanceof circle) {
+                const circlePoints = lineCircleIntersectionPoints(this, obj);
+                points.push(...circlePoints);
+            }
+        }
+        return points;
     }
 }
 
@@ -252,8 +330,8 @@ function drawAll() {
 }
 
 function redraw() {
-    ondraw();
     drawAll();
+    ondraw();
     requestAnimationFrame(redraw);
 }
 redraw()
