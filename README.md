@@ -30,7 +30,7 @@ new point(x座標, y座標)
 new line(始点, 終点, ?色)
 
 //箱を作成
-new box(x座標, y座標, 横幅, 縦幅, ?色)
+new box(x座標, y座標, 横幅, 縦幅, ?色, ?画像)
 
 //円を作成
 new circle(x座標, y座標, 半径, ?色)
